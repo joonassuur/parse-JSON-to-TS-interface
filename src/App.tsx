@@ -62,6 +62,7 @@ function App() {
   return (
     <div className="App" style={{ display: 'flex' }}>
       <textarea
+        placeholder="Paste JSON here"
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
         rows={10}
