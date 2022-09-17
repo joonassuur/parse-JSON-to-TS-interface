@@ -1,6 +1,6 @@
 {
-  "name": "parser-app",
-  "homepage": "https://joonassuur.github.io/parse-JSON-to-TS-interface/",
+  "name": "parse-json-to-ts-interface",
+  "homepage": "https://joonassuur.github.io/parse-json-to-ts-interface/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
