@@ -16,11 +16,10 @@ const getValueType = (value: any) => {
   return typeof value;
 };
 
-const parseJsonIntoInterface = (inputJson: string) => {
-  const parsedJson = JSON.parse(inputJson);
+const parseIntoInterface = (input: JSON) => {
   let outputInterfaceString = '';
 
-  Object.entries(parsedJson).map(([key, value]) => {
+  Object.entries(input).map(([key, value]) => {
     const valueType = getValueType(value);
     const lastIndexOfSemicolon = outputInterfaceString.lastIndexOf(';');
 
@@ -45,14 +44,34 @@ const parseJsonIntoInterface = (inputJson: string) => {
 };
 
 function App() {
-  const [inputText, setInputText] = useState('');
-  const [outputText, setOutputText] = useState('');
+  const [jsonInputText, setJsonInputText] = useState('');
+  const [jsonOutputText, setJsonOutputText] = useState('');
+
+  const [jsObjectInputText, setJsObjectInputText] = useState('');
+  const [jsObjectOutputText, setJsObjectOutputText] = useState('');
 
   const handleJsonParse = () => {
-    if (inputText) {
+    if (jsonInputText) {
       try {
-        const parsedString = parseJsonIntoInterface(inputText);
-        setOutputText(parsedString);
+        const parsedJson = JSON.parse(jsonInputText);
+        const parsedString = parseIntoInterface(parsedJson);
+        setJsonOutputText(parsedString);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  const handleJSparse = () => {
+    if (jsObjectInputText) {
+      try {
+        const removedWhitespace = jsObjectInputText.replaceAll(' ', '');
+        const addQuotesFirstPart = removedWhitespace.replaceAll('{', '{"');
+        const addQuotesSecondPart = addQuotesFirstPart.replaceAll(':', '":');
+        const addQuotesThirdPart = addQuotesSecondPart.replaceAll(',', ',"');
+        const parsedJson = JSON.parse(addQuotesThirdPart);
+        const parsed = parseIntoInterface(parsedJson);
+        setJsObjectOutputText(parsed);
       } catch (e) {
         console.error(e);
       }
@@ -60,20 +79,39 @@ function App() {
   };
 
   return (
-    <div className="App" style={{ display: 'flex' }}>
-      <textarea
-        placeholder="Paste JSON here"
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        rows={10}
-      />
-      <button onClick={handleJsonParse}>Parse</button>
-      <div
-        style={{
-          whiteSpace: 'pre',
-        }}
-      >
-        {outputText}
+    <div className="App">
+      <div style={{ display: 'flex' }}>
+        <textarea
+          placeholder="Paste JSON object here"
+          value={jsonInputText}
+          onChange={(e) => setJsonInputText(e.target.value)}
+          rows={10}
+        />
+        <button onClick={handleJsonParse}>Parse</button>
+        <div
+          style={{
+            whiteSpace: 'pre',
+          }}
+        >
+          {jsonOutputText}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex' }}>
+        <textarea
+          placeholder="Paste JS object here"
+          value={jsObjectInputText}
+          onChange={(e) => setJsObjectInputText(e.target.value)}
+          rows={10}
+        />
+        <button onClick={handleJSparse}>Parse</button>
+        <div
+          style={{
+            whiteSpace: 'pre',
+          }}
+        >
+          {jsObjectOutputText}
+        </div>
       </div>
     </div>
   );
