@@ -58,11 +58,12 @@ function App() {
         setJsonOutputText(parsedString);
       } catch (e) {
         console.error(e);
+        setJsonOutputText('');
       }
     }
   };
 
-  const handleJSparse = () => {
+  const handleJsParse = () => {
     if (jsObjectInputText) {
       try {
         const removedWhitespace = jsObjectInputText.replaceAll(' ', '');
@@ -74,6 +75,7 @@ function App() {
         setJsObjectOutputText(parsed);
       } catch (e) {
         console.error(e);
+        setJsObjectOutputText('');
       }
     }
   };
@@ -104,7 +106,7 @@ function App() {
           onChange={(e) => setJsObjectInputText(e.target.value)}
           rows={10}
         />
-        <button onClick={handleJSparse}>Parse</button>
+        <button onClick={handleJsParse}>Parse</button>
         <div
           style={{
             whiteSpace: 'pre',
