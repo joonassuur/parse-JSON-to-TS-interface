@@ -16,6 +16,22 @@ const getValueType = (value: any) => {
   return typeof value;
 };
 
+function removeOutsideText(text: string) {
+  const startIndex = text.indexOf('{');
+  const endIndex = text.lastIndexOf('}');
+
+  if (startIndex === -1 || endIndex === -1) {
+    return text; // No braces found
+  }
+
+  return text.slice(startIndex, endIndex + 1);
+}
+
+function addQuotesToKeys(inputString: string) {
+  const regex = /(\w+)(?=:)/g;
+  return inputString.replace(regex, '"$1"');
+}
+
 const parseIntoInterface = (input: JSON) => {
   let outputInterfaceString = '';
 
@@ -58,7 +74,7 @@ function App() {
         setJsonOutputText(parsedString);
       } catch (e) {
         console.error(e);
-        setJsonOutputText('');
+        setJsObjectOutputText('Object is not a valid JSON object');
       }
     }
   };
@@ -66,16 +82,13 @@ function App() {
   const handleJsParse = () => {
     if (jsObjectInputText) {
       try {
-        const removedWhitespace = jsObjectInputText.replaceAll(' ', '');
-        const addQuotesFirstPart = removedWhitespace.replaceAll('{', '{"');
-        const addQuotesSecondPart = addQuotesFirstPart.replaceAll(':', '":');
-        const addQuotesThirdPart = addQuotesSecondPart.replaceAll(',', ',"');
-        const parsedJson = JSON.parse(addQuotesThirdPart);
-        const parsed = parseIntoInterface(parsedJson);
-        setJsObjectOutputText(parsed);
+        const one = removeOutsideText(jsObjectInputText);
+        const result = addQuotesToKeys(one);
+        const parsedJson = JSON.parse(result);
+        const parsedString = parseIntoInterface(parsedJson);
+        setJsonOutputText(parsedString);
       } catch (e) {
-        console.error(e);
-        setJsObjectOutputText('');
+        setJsonOutputText('Object is not a valid JS object');
       }
     }
   };
